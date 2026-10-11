@@ -20,6 +20,7 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: "24.x"
+      - run: docker build -t moon-web .
       - run: npm ci
       - run: npm run lint
       - run: npm run build

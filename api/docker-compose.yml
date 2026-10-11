@@ -1,0 +1,20 @@
+services:
+  install:
+    build: .
+    image: moon-api
+    command: ["npm", "ci"]
+    volumes:
+      - .:/root/project
+  vite:
+    build: .
+    image: moon-api
+    command: ["npm", "run", "dev"]
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/root/project
+    depends_on:
+      install:
+        condition: service_completed_successfully
+volumes:
+  node_modules:

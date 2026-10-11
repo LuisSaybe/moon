@@ -4,6 +4,7 @@ on:
       - main
     paths:
       - 'web/**'
+      - '.github/**'
 
 permissions:
   id-token: write
@@ -21,6 +22,7 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: "24.x"
+      - run: docker build -t moon-web .
       - run: npm ci
       - run: npm run lint
       - run: npm run build
@@ -35,9 +37,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-2
-          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          role-to-assume: github-role-iam-Role-d4wAv2Qywnkg
       - uses: actions/setup-node@master
         with:
           node-version: "24.x"
       - run: npm ci
       - run: npm run build
+      - run: aws s3 sync dist s3://mooncowluna.com
+      - run: aws cloudfront create-invalidation --distribution-id EXOH28OSNRFRW --paths '/*'
