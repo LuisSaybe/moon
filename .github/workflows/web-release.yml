@@ -34,7 +34,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-2
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
       - uses: actions/setup-node@master
         with:
