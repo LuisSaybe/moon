@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web/**'
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+      - uses: actions/setup-node@master
+        with:
+          node-version: "20.x"
+      - run: npm ci
+      - run: npm run build
+      - run: aws s3 sync dist s3://luissaybe.com
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/*'

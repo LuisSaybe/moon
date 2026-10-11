@@ -1,0 +1,7 @@
+FROM node:24-alpine
+
+ENV SOURCE_DIRECTORY=/root/project
+
+WORKDIR $SOURCE_DIRECTORY
+
+COPY . .
