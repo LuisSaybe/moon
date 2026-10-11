@@ -37,7 +37,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-2
-          role-to-assume: github-role-iam-Role-d4wAv2Qywnkg
+          role-to-assume: arn:aws:iam::264241998403:role/github-role-iam-Role-d4wAv2Qywnkg
       - uses: actions/setup-node@master
         with:
           node-version: "24.x"
