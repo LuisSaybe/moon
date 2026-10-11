@@ -1,0 +1,26 @@
+on:
+  pull_request:
+    paths:
+      - 'api/**'
+      - '.github/**'
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@master
+        with:
+          node-version: "24.x"
+      - run: docker build -t moon-api .
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build

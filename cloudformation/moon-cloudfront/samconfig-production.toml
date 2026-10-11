@@ -2,13 +2,14 @@ version=0.1
 
 [default.deploy.parameters]
 stack_name = "moon-cloudfront"
-s3_bucket = "cloudformation-deployments-moon"
-s3_prefix = "cloudformation-deployments-moon"
+s3_bucket = "cloudformation-deployments-luna"
+s3_prefix = "cloudformation-deployments-luna"
 region = "us-east-2"
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 parameter_overrides=[
+  "DomainNameId=mooncowluna.com",
   "DomainName=mooncowluna.com",
   "HostedZoneId=Z06353913HRHDK4RL89QV",
-  "AcmCertificateArn=arn:aws:acm:us-east-1:264241998403:certificate/d1374949-cf69-4ac2-8d6a-4b435a8ff655"
+  "AcmCertificateArn=arn:aws:acm:us-east-1:264241998403:certificate/19eb26aa-c447-4ae5-980c-c8b8d2438c4b"
 ]
