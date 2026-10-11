@@ -9,6 +9,6 @@ capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 parameter_overrides=[
   "DomainName=mooncowluna.com",
-  "HostedZoneId=Z073568626TI3I5AZRPSW",
+  "HostedZoneId=Z06353913HRHDK4RL89QV",
   "AcmCertificateArn=arn:aws:acm:us-east-1:264241998403:certificate/d1374949-cf69-4ac2-8d6a-4b435a8ff655"
 ]
