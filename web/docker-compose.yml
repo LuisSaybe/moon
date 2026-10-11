@@ -10,7 +10,7 @@ services:
     image: moon-web
     command: ["npm", "run", "dev"]
     ports:
-      - "5173:5173"
+      - "80:80"
     volumes:
       - .:/root/project
     depends_on:

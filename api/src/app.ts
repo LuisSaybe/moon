@@ -1,8 +1,11 @@
-import type { RequestListener } from 'node:http'
-import { buildSchema } from 'graphql'
-import { createHandler } from 'graphql-http/lib/use/http'
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@as-integrations/express5'
+import cors from 'cors'
+import express from 'express'
 
-const schema = buildSchema(`
+import { prisma } from './db'
+
+const typeDefs = `
   type Item {
     id: ID!
     name: String!
@@ -11,24 +14,28 @@ const schema = buildSchema(`
   type Query {
     items: [Item!]!
   }
-`)
+`
 
-const graphql = createHandler({
-  schema,
-  rootValue: {
-    items: () => [
-      { id: '1', name: 'Moon' },
-      { id: '2', name: 'Mars' },
-      { id: '3', name: 'Venus' },
-    ],
+export const apollo = new ApolloServer({
+  typeDefs,
+  resolvers: {
+    Query: {
+      items: () => [
+        { id: '1', name: 'Moon' },
+        { id: '2', name: 'Mars' },
+        { id: '3', name: 'Venus' },
+      ],
+    },
   },
+  stopOnTerminationSignals: false,
 })
 
-export const handler: RequestListener = (request, response) => {
-  if (request.url?.split('?')[0] === '/graphql') {
-    return graphql(request, response)
-  }
+await prisma.$connect()
+await apollo.start()
 
-  response.writeHead(404, { 'Content-Type': 'text/plain' })
-  response.end('Not found')
-}
+export const app = express()
+app.use('/graphql', cors(), express.json(), expressMiddleware(apollo, {
+  context: async () => ({ prisma }),
+}))
+
+export const handler = app
