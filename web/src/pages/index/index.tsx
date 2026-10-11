@@ -7,3 +7,5 @@ export function Index() {
     </main>
   )
 }
+
+export default Index

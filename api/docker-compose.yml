@@ -1,4 +1,19 @@
 services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: moon
+      POSTGRES_PASSWORD: moon
+      POSTGRES_DB: moon
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moon -d moon"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   install:
     build: .
     image: moon-api
@@ -9,6 +24,8 @@ services:
     build: .
     image: moon-api
     command: ["npm", "run", "dev"]
+    environment:
+      DATABASE_URL: postgresql://moon:moon@postgres:5432/moon?schema=public
     ports:
       - "5173:5173"
     volumes:
@@ -16,5 +33,21 @@ services:
     depends_on:
       install:
         condition: service_completed_successfully
+      migrate:
+        condition: service_completed_successfully
+  migrate:
+    build: .
+    image: moon-api
+    command: ["npm", "run", "db:deploy"]
+    environment:
+      DATABASE_URL: postgresql://moon:moon@postgres:5432/moon?schema=public
+    volumes:
+      - .:/root/project
+    depends_on:
+      install:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
 volumes:
   node_modules:
+  postgres_data:

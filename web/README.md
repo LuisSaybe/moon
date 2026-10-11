@@ -2,6 +2,34 @@
 
 React + TypeScript + Vite, based on the luissaybe project.
 
+The game page uses Apollo Client to query `items { id name }` from
+`http://127.0.0.1:5173/graphql` and displays loading, error, and empty states.
+Start the API before visiting the game page. Set `VITE_GRAPHQL_URL` in `.env.local`
+to override the endpoint, then restart Vite (or rebuild for production).
+
+## Routing
+
+[React Router](https://reactrouter.com/start/declarative/routing) discovers page
+components in `src/pages/**/*.tsx` through Vite's file glob. Each page must
+default-export a React component. Paths mirror the folder and file names, with
+trailing `index` segments omitted:
+
+| Page | Route |
+| --- | --- |
+| `src/pages/index/index.tsx` | `/` |
+| `src/pages/game/index.tsx` | `/game` |
+| `src/pages/about.tsx` | `/about` |
+| `src/pages/game/settings.tsx` | `/game/settings` |
+
+Adding a page automatically adds its route. Keep shared components outside
+`src/pages`; CSS Modules can stay beside their page. Duplicate route paths produce
+an explicit error. Unknown URLs show a page-not-found screen with a home link.
+Use React Router's `Link` for client-side navigation.
+
+Vite supports direct page URLs and refreshes during development and preview.
+When hosting `dist` elsewhere, configure the server to fall back to `index.html`
+for application routes.
+
 ## Development
 
 With Node.js 24, run `npm ci`, then `npm run dev`.
